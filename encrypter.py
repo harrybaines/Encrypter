@@ -1,16 +1,60 @@
 #Encrypter
 import random
 from random import randint
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+import os
 
-class Cipher():
+class Database():
+
+	def __init__(self):
+		#database stuff
+		pass
+
+
+class Screen():
+
+	bgCol = "#%02x%02x%02x"%(160,239,194)
+	
+	def __init__(self):
+		#make default window
+	    self.root = Tk()
+	    self.root.geometry('480x500+200+100')
+	    self.root.title('Password Encrypter')
+	    self.root.resizable(0,0)
+	    self.root.configure(background=self.bgCol)
+	    self.note = ttk.Notebook(self.root, width=480, height=500)
+	    self.passEncTab = Frame(self.note, bg=self.bgCol)
+	    self.note.add(self.passEncTab, text='Encrypt Password')
+	    self.note.pack()
+
+	    self.password = StringVar()
+	    self.encPassword = StringVar()
+
+	    self.ttlLbl = Label(self.passEncTab, bg=self.bgCol, text="Enter your password below:", font=("Helvetica",25)).grid(row=0,column=0,pady=(50,0))
+	    self.passEntry = Entry(self.passEncTab, highlightbackground=self.bgCol, textvariable=self.password).grid(row=1,column=0,pady=(10,0))
+	    self.encryptButton = Button(self.passEncTab, text='ENCRYPT', command=self.get_entry, font=("Helvetica",28)).grid(row=3,column=0,pady=(10,0),columnspan=3)
+
+	    self.origLabel = Label(self.passEncTab, text="Your Password", font=("Helvetica",20)).grid(row=4,column=0,pady=(20,0))
+	    self.newLabel = Label(self.passEncTab, text="Encrypted Password", font=("Helvetica",20)).grid(row=6,column=0,pady=(10,0))
+
+	    self.origPassLbl = Label(self.passEncTab, textvariable=self.password, font=("Helvetica",18)).grid(row=5,column=0,pady=(10,0))
+	    self.encPassLbl = Label(self.passEncTab, textvariable=self.encPassword, font=("Helvetica",18)).grid(row=7,column=0,pady=(10,0))
+
+	    
+
+
+
+class Cipher(Screen):
 
 	def get_entry(self):
 		#get the user's password to encrypt
-		self.inp_pass = input("Enter your password  ")
+		print(self.password.get())
 
 		#check
-		while len(self.inp_pass) < 5:
-			self.inp_pass = input("ERROR - password not long enough. Try again:  ")
+		if len(self.password.get()) < 5:
+			self.errorMessage = messagebox.showwarning(title='Error',message='Password not long enough - must be 5 characters or more.')
 		else:
 			#take input
 			self.orig_pass_dict = {}
@@ -26,7 +70,6 @@ class Cipher():
 		#securely encrypt the password
 		self.upper_alph = []
 		self.lower_alph = []
-		self.upper = 1
 		self.enc_pass = ""
 		self.new_pass_dict = {}
 
@@ -73,7 +116,7 @@ if __name__ == "__main__":
 	new_pass = Cipher()
 	password = new_pass.get_entry()
 	encrypted = new_pass.encrypt(password)
-	print("\nYour new decrypted password is: ", encrypted)
+	print("\nYour new encrypted password is: ", encrypted)
 	decrypted = new_pass.decrypt(encrypted)
 	print("\nYour encrypted password is :", encrypted)
 	print("Your decrypted password is :", decrypted, "\n")
